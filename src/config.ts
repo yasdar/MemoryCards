@@ -23,10 +23,22 @@ export const FinishGame = (score: number, durationMs: number) => {
     score: score,
     durationMs: durationMs,
   });
+
   window.parent.postMessage(
     { gameId: "memory", score: score, durationMs: durationMs },
     "*"
   );
+
+  setTimeout(() => {
+    //Optional Flutter WebView fallback:
+    // @ts-ignore
+    if (window.flutter_inappwebview) {
+      // @ts-ignore
+      window.flutter_inappwebview?.callHandler("bbScore", [
+        { gameId: "memory", score: score, durationMs: durationMs },
+      ]);
+    }
+  }, 1000);
 };
 export const ReseizeGame = () => {
   let WW: number = window.innerWidth;
